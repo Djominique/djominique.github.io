@@ -1,5 +1,5 @@
 body {
-  background: #f4f6f8;
+  background: #f5f1e8;
   color: #222;
   font-family: Arial, sans-serif;
   margin: 0;
@@ -7,15 +7,15 @@ body {
 }
 
 header {
-  background: #2600cc;
+  background: #0b2234;
   padding: 30px 20px;
   text-align: center;
 }
 
 h1 {
-  color: white;
+  color: #0b2234;
   margin: 0;
-  font-size: 2.2rem;
+  font-size: 3rem;
 }
 
 section {
@@ -39,7 +39,7 @@ article {
 
 h2,
 h3 {
-  color: #2600cc;
+  color: #0b2234;
   margin-top: 0;
   margin-bottom: 20px;
 }
@@ -51,29 +51,35 @@ p {
 button,
 input[type="submit"],
 a.button {
-  background: #2600cc;
+  background: transparent;
   border: none;
-  border-radius: 8px;
-  color: #fff;
+  color: white;
   cursor: pointer;
   display: inline-block;
   font-size: 1rem;
   font-weight: bold;
   padding: 12px 22px;
   text-decoration: none;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
 }
 
 button:hover,
 input[type="submit"]:hover,
 a.button:hover {
-  background: #1c0099;
-  transform: translateY(-2px);
+  color: #25d0c7;
+}
+
+button:active,
+input[type="submit"]:active,
+a.button:active {
+  color: #25d0c7;
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
 button:focus,
 input[type="submit"]:focus,
 a.button:focus {
-  outline: 3px solid rgba(38, 0, 204, 0.3);
+  outline: 2px solid #25d0c7;
   outline-offset: 3px;
 }
