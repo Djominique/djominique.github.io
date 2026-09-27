@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="Styles.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact</title>
+  </head>
+  <body>
+    <header>
+      <button onclick="location.href = 'index.html'">Home</button>
+      <button onclick="location.href = 'Projecten.html'">Projecten</button>
+      <button onclick="location.href = 'Blog.html'">Blog</button>
+    </header>
+    <main>
+      <section>
+        <h1>Contact</h1>
+        <p>
+          Ben je recruiter, mede-student of gewoon nieuwsgierig naar een van
+          mijn projecten? Neem gerust contact op, bijvoorbeeld voor een
+          stageplek, een samenwerking, of als je vragen hebt over hoe ik iets
+          heb aangepakt.
+        </p>
+        <form id="contact-form" novalidate>
+          <fieldset>
+            <legend>Stuur een bericht</legend>
+
+            <label for="naam">Naam</label>
+            <input
+              type="text"
+              id="naam"
+              name="naam"
+              required
+              aria-describedby="naam-error"
+            />
+            <span id="naam-error" class="error-message"></span>
+
+            <label for="email">E-mailadres</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              aria-describedby="email-error"
+            />
+            <span id="email-error" class="error-message"></span>
+
+            <label for="bericht">Bericht</label>
+            <textarea
+              id="bericht"
+              name="bericht"
+              rows="1"
+              required
+              aria-describedby="bericht-error"
+            ></textarea>
+            <span id="bericht-error" class="error-message"></span>
+            <button type="submit" class="btn-submit">Versturen</button>
+          </fieldset>
+        </form>
+        <p id="form-status" role="status" aria-live="polite"></p>
+      </section>
+    </main>
+    <footer>
+      <p>Gemaakt door Dominique</p>
+    </footer>
+    <script src="contact.js"></script>
+  </body>
+</html>

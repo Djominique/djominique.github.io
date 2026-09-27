@@ -132,6 +132,14 @@ a.button:focus {
   outline-offset: 3px;
 }
 
+.btn-submit {
+  color: #0b2234;
+}
+
+.btn-submit:hover {
+  color: rgb(87, 87, 87);
+}
+
 @media (max-width: 760px) {
   .about-layout {
     grid-template-columns: 1fr;
