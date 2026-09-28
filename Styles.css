@@ -140,6 +140,14 @@ a.button:focus {
   color: rgb(87, 87, 87);
 }
 
+.toggle-btn {
+  color: #0b2234;
+}
+
+.toggle-btn:hover {
+  color: rgb(87, 87, 87);
+}
+
 @media (max-width: 760px) {
   .about-layout {
     grid-template-columns: 1fr;
