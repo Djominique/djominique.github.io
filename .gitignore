@@ -1,0 +1,8 @@
+# .NET build bestanden
+**/bin/
+**/obj/
+
+# Visual Studio / VS Code lokale bestanden
+.vs/
+*.user
+*.suo
