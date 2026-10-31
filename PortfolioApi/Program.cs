@@ -7,6 +7,7 @@ using PortfolioApi.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<PortfolioDbContext>(options =>
@@ -43,6 +44,12 @@ app.MapControllers();
 
 app.MapGroup("/auth")
     .MapIdentityApi<User>();
+
+app.MapPost("/auth/logout", async (SignInManager<User> signInManager) =>
+{
+    await signInManager.SignOutAsync();
+    return Results.Ok();
+});
 
 await DbSeeder.SeedAsync(app.Services);
 

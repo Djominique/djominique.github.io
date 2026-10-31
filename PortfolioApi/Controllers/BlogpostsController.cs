@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PortfolioApi.DTOs;
 using PortfolioApi.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PortfolioApi.Controllers;
 
@@ -35,7 +36,8 @@ public class BlogpostsController : ControllerBase
         return Ok(blogpost);
     }
 
-    [HttpPost]
+    [Authorize(Policy = "CanEditPortfolio")]
+[HttpPost]
     public async Task<IActionResult> CreateBlogpost(CreateBlogpostDto dto)
     {
         var blogpost = await _blogpostService.CreateAsync(dto);
@@ -47,7 +49,8 @@ public class BlogpostsController : ControllerBase
         );
     }
 
-    [HttpPut("{id}")]
+    [Authorize(Policy = "CanEditPortfolio")]
+[HttpPut("{id}")]
     public async Task<IActionResult> UpdateBlogpost(int id, UpdateBlogpostDto dto)
     {
         var gelukt = await _blogpostService.UpdateAsync(id, dto);
@@ -60,7 +63,8 @@ public class BlogpostsController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
+    [Authorize(Policy = "CanEditPortfolio")]
+[HttpDelete("{id}")]
     public async Task<IActionResult> DeleteBlogpost(int id)
     {
         var gelukt = await _blogpostService.DeleteAsync(id);

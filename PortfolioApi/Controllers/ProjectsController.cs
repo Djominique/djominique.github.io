@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PortfolioApi.DTOs;
 using PortfolioApi.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PortfolioApi.Controllers;
 
@@ -35,8 +36,9 @@ public class ProjectsController : ControllerBase
         return Ok(project);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> CreateProject(CreateProjectDto dto)
+    [Authorize(Policy = "CanEditPortfolio")]
+[HttpPost]
+public async Task<IActionResult> CreateProject(CreateProjectDto dto)
     {
         var project = await _projectService.CreateAsync(dto);
 
@@ -47,8 +49,9 @@ public class ProjectsController : ControllerBase
         );
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateProject(int id, UpdateProjectDto dto)
+    [Authorize(Policy = "CanEditPortfolio")]
+[HttpPut("{id}")]
+public async Task<IActionResult> UpdateProject(int id, UpdateProjectDto dto)
     {
         var gelukt = await _projectService.UpdateAsync(id, dto);
 
@@ -60,8 +63,9 @@ public class ProjectsController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteProject(int id)
+   [Authorize(Policy = "CanEditPortfolio")]
+[HttpDelete("{id}")]
+public async Task<IActionResult> DeleteProject(int id)
     {
         var gelukt = await _projectService.DeleteAsync(id);
 
