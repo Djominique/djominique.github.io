@@ -15,7 +15,7 @@ public static class DbSeeder
         var userManager =
             scope.ServiceProvider.GetRequiredService<UserManager<User>>();
 
-        string[] rollen = { "Admin", "Editor" };
+        string[] rollen = { "Gast", "Admin", "Editor" };
 
         foreach (var rol in rollen)
         {

@@ -27,7 +27,7 @@ public class ProjectsController : ControllerBase
     public async Task<IActionResult> GetProject(int id)
     {
         var project = await _projectService.GetByIdAsync(id);
-
+        
         if (project == null)
         {
             return NotFound();

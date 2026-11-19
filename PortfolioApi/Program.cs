@@ -42,14 +42,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapGroup("/auth")
-    .MapIdentityApi<User>();
-
-app.MapPost("/auth/logout", async (SignInManager<User> signInManager) =>
-{
-    await signInManager.SignOutAsync();
-    return Results.Ok();
-});
 
 await DbSeeder.SeedAsync(app.Services);
 
