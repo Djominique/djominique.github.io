@@ -63,7 +63,7 @@ public class BlogpostsController : ControllerBase
         return NoContent();
     }
 
-    [Authorize(Policy = "CanEditPortfolio")]
+    [Authorize(Policy = "CanDeletePortfolio")]
 [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteBlogpost(int id)
     {

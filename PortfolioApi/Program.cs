@@ -27,7 +27,9 @@ builder.Services.AddAuthentication();
 
 builder.Services.AddAuthorizationBuilder()
     .AddPolicy("CanEditPortfolio", policy =>
-        policy.RequireRole("Editor", "Admin"));
+        policy.RequireRole("Editor", "Admin"))
+    .AddPolicy("CanDeletePortfolio", policy =>
+        policy.RequireRole("Admin"));
 
 var app = builder.Build();
 
@@ -46,3 +48,5 @@ app.MapControllers();
 await DbSeeder.SeedAsync(app.Services);
 
 app.Run();
+
+public partial class Program { }

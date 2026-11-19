@@ -51,7 +51,7 @@ public class BlogpostService
         {
             Titel = dto.Titel,
             Inhoud = dto.Inhoud,
-            Publicatiedatum = dto.Publicatiedatum
+            Publicatiedatum = dto.Publicatiedatum!.Value
         };
 
         _context.Blogposts.Add(blogpost);
@@ -77,7 +77,7 @@ public class BlogpostService
 
         blogpost.Titel = dto.Titel;
         blogpost.Inhoud = dto.Inhoud;
-        blogpost.Publicatiedatum = dto.Publicatiedatum;
+        blogpost.Publicatiedatum = dto.Publicatiedatum!.Value;
 
         await _context.SaveChangesAsync();
 

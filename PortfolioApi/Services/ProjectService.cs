@@ -57,7 +57,7 @@ public class ProjectService
             Beschrijving = dto.Beschrijving,
             Categorie = dto.Categorie,
             GitHubUrl = dto.GitHubUrl,
-            Datum = dto.Datum
+            Datum = dto.Datum!.Value
         };
 
         _context.Projects.Add(project);
@@ -87,7 +87,7 @@ public class ProjectService
         project.Beschrijving = dto.Beschrijving;
         project.Categorie = dto.Categorie;
         project.GitHubUrl = dto.GitHubUrl;
-        project.Datum = dto.Datum;
+        project.Datum = dto.Datum!.Value;
 
         await _context.SaveChangesAsync();
 

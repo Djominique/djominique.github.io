@@ -63,7 +63,7 @@ public async Task<IActionResult> UpdateProject(int id, UpdateProjectDto dto)
         return NoContent();
     }
 
-   [Authorize(Policy = "CanEditPortfolio")]
+   [Authorize(Policy = "CanDeletePortfolio")]
 [HttpDelete("{id}")]
 public async Task<IActionResult> DeleteProject(int id)
     {

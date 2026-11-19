@@ -46,5 +46,36 @@ public static class DbSeeder
         {
             await userManager.AddToRoleAsync(admin, "Admin");
         }
+
+        const string editorEmail = "editor@portfolio.test";
+
+var editorPassword = scope.ServiceProvider
+    .GetRequiredService<IConfiguration>()
+    ["SeedUsers:EditorPassword"];
+
+var editor = await userManager.FindByEmailAsync(editorEmail);
+
+if (editor == null && !string.IsNullOrEmpty(editorPassword))
+{
+    editor = new User
+    {
+        UserName = editorEmail,
+        Email = editorEmail,
+        EmailConfirmed = true
+    };
+
+    var result = await userManager.CreateAsync(editor, editorPassword);
+
+    if (!result.Succeeded)
+    {
+        throw new Exception("Editor aanmaken mislukt.");
+    }
+}
+
+if (editor != null &&
+    !await userManager.IsInRoleAsync(editor, "Editor"))
+{
+    await userManager.AddToRoleAsync(editor, "Editor");
+}
     }
 }
