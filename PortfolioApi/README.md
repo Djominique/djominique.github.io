@@ -1,153 +1,238 @@
+
 # Portfolio API
 
-## Project
+## 1. Beschrijving
 
-Deze applicatie is de backend van mijn portfoliosite. De API is gebouwd met ASP.NET Core Web API en bevat functionaliteit voor het beheren van projecten en blogposts.
+Dit project is een ASP.NET Core Web API voor mijn portfolio.
 
-De API ondersteunt voor zowel Projects als Blogposts volledige CRUD-functionaliteit:
+Met de API kunnen projecten en blogposts worden opgehaald,
+toegevoegd, gewijzigd en verwijderd.
 
-- GET alle items
-- GET op id
-- POST
-- PUT op id
-- DELETE op id
-
-Daarnaast heb ik ASP.NET Core Identity toegevoegd voor authenticatie en autorisatie.
-
-## Technieken
-
-Voor dit project gebruik ik:
-
-- .NET 10
-- ASP.NET Core Web API
-- Controllers
+De API gebruikt:
+- C# en .NET 10
+- ASP.NET Core Controllers
 - Entity Framework Core
-- SQL Server
+- SQL Server Express
 - ASP.NET Core Identity
-- Swagger / Swashbuckle
+- xUnit voor integratietests
+- Swagger voor het handmatig testen van endpoints
 
-## Gekozen API-stijl
+## 2. Projectstructuur
 
-Ik heb gekozen voor Controllers in plaats van Minimal API.
+De applicatie is verdeeld in verschillende onderdelen:
 
-Controllers zorgen ervoor dat de HTTP-afhandeling duidelijk gescheiden blijft van de applicatielogica en datatoegang. De Controllers roepen Services aan en de Services gebruiken de PortfolioDbContext voor toegang tot de database.
+- Controllers: ontvangen en verwerken HTTP-requests.
+- Services: bevatten de logica voor de CRUD-acties.
+- Models: beschrijven de database-entiteiten.
+- DTOs: bepalen welke gegevens de API ontvangt en teruggeeft.
+- Data: bevat de DbContext, migraties en DbSeeder.
+- PortfolioApi.Tests: bevat de automatische integratietests.
 
-## Codestructuur
+## 3. Database
 
-De applicatie is opgebouwd in verschillende lagen:
+De applicatie gebruikt SQL Server Express.
 
-```text
-Controllers/
-    ProjectsController.cs
-    BlogpostsController.cs
+Database voor normaal gebruik:
+PortfolioDb
 
-Services/
-    ProjectService.cs
-    BlogpostService.cs
+Database voor integratietests:
+PortfolioTestDb
 
-Data/
-    PortfolioDbContext.cs
-    DbSeeder.cs
+De testdatabase staat los van de normale database.
+Hierdoor kunnen tests gegevens toevoegen, wijzigen en verwijderen
+zonder de normale portfolio-gegevens te veranderen.
 
-Models/
-    Project.cs
-    Blogpost.cs
-    User.cs
+### Database instellen
 
-DTOs/
-    ProjectDto.cs
-    CreateProjectDto.cs
-    UpdateProjectDto.cs
-    BlogpostDto.cs
-    CreateBlogpostDto.cs
-    UpdateBlogpostDto.cs
-```
+De connectionstring wordt ingesteld via de configuratie van
+de applicatie onder `ConnectionStrings:DefaultConnection`.
 
-De verantwoordelijkheden zijn als volgt verdeeld:
+Gebruik hiervoor de naam van je eigen SQL Server-instantie.
 
-- **Controllers:** verwerken HTTP-requests en bepalen het HTTP-resultaat.
-- **Services:** bevatten de applicatielogica en voeren CRUD-bewerkingen uit.
-- **Data:** bevat de DbContext en de koppeling met SQL Server.
-- **Models:** beschrijven de entiteiten die door EF Core worden opgeslagen.
-- **DTOs:** bepalen welke gegevens de API ontvangt en terugstuurt.
+### Migraties uitvoeren
 
-## Database
+Open een terminal in de map PortfolioApi.
 
-De applicatie gebruikt SQL Server als database.
+Voer uit:
 
-De connectionstring staat in:
-
-```text
-appsettings.json
-```
-
-De PortfolioDbContext gebruikt Entity Framework Core om verbinding te maken met SQL Server.
-
-De database bevat onder andere gegevens voor:
-
-- Projects
-- Blogposts
-- Identity-gebruikers
-- Identity-rollen
-
-## Database aanmaken
-
-De database wordt aangemaakt en bijgewerkt met Entity Framework Core migrations.
-
-Voor de eerste versie van de database:
-
-```bash
-dotnet ef migrations add InitialCreate
 dotnet ef database update
-```
 
-Na het toevoegen van ASP.NET Core Identity is een extra migration aangemaakt:
+Voor de aparte testdatabase:
 
-```bash
-dotnet ef migrations add AddIdentity
-dotnet ef database update
-```
+dotnet ef database update --connection "Server=DESKTOP-UC9ROU3\SQLEXPRESS;Database=PortfolioTestDb;Trusted_Connection=True;TrustServerCertificate=True"
 
-Hierdoor worden ook de Identity-tabellen aangemaakt, zoals:
+## 4. API starten
 
-```text
-AspNetUsers
-AspNetRoles
-AspNetUserRoles
-```
+Open een terminal in PortfolioApi.
 
-## Applicatie starten
+Voer uit:
 
-Ga in een terminal naar de map waarin `PortfolioApi.csproj` staat.
-
-Start daarna de API met:
-
-```bash
+dotnet restore
+dotnet build
 dotnet run
-```
 
-In de terminal wordt vervolgens het lokale adres van de API weergegeven.
+De API is lokaal bereikbaar via de URL die in de terminal verschijnt.
 
-Swagger kan daarna via de `/swagger`-route worden geopend.
+Bij mijn lokale configuratie:
 
-## Authenticatie en autorisatie
+http://localhost:5140/swagger
 
-De API gebruikt ASP.NET Core Identity.
+Met Swagger kunnen de endpoints handmatig getest worden.
 
-Gebruikers kunnen inloggen via de Identity-endpoints. Wachtwoorden worden door Identity gehasht opgeslagen.
+## 5. API-endpoints
 
-De applicatie gebruikt de rollen:
+### Projects
 
-- Admin
-- Editor
+GET /api/Projects
+GET /api/Projects/{id}
+POST /api/Projects
+PUT /api/Projects/{id}
+DELETE /api/Projects/{id}
 
-De GET-endpoints voor Projects en Blogposts zijn openbaar.
+### Blogposts
 
-Voor POST, PUT en DELETE geldt een authorization-policy. Alleen gebruikers met de rol Admin of Editor mogen deze endpoints gebruiken.
+GET /api/Blogposts
+GET /api/Blogposts/{id}
+POST /api/Blogposts
+PUT /api/Blogposts/{id}
+DELETE /api/Blogposts/{id}
 
-## Repository
+### Authenticatie
 
-De broncode van dit project staat in mijn Git-repository.
+POST /auth/register
+POST /auth/login
+POST /auth/logout
 
-De commitgeschiedenis is in de repository terug te vinden en laat de verschillende stappen van de ontwikkeling zien.
-https://github.com/Djominique/djominique.github.io 
+## 6. Authenticatie en autorisatie
+
+De API gebruikt ASP.NET Core Identity voor registratie,
+inloggen en het beheren van gebruikersrollen.
+
+Er zijn drie rollen:
+
+Gast:
+- Mag projecten en blogposts bekijken.
+- Mag geen gegevens toevoegen, wijzigen of verwijderen.
+
+Editor:
+- Mag projecten en blogposts bekijken.
+- Mag projecten en blogposts toevoegen en wijzigen.
+- Mag geen projecten of blogposts verwijderen.
+
+Admin:
+- Mag projecten en blogposts bekijken.
+- Mag projecten en blogposts toevoegen, wijzigen en verwijderen.
+
+Bij openbare registratie krijgt een nieuwe gebruiker
+automatisch de rol Gast.
+
+De rechten worden gecontroleerd met authorization policies:
+
+CanEditPortfolio:
+Editor en Admin
+
+CanDeletePortfolio:
+Alleen Admin
+
+GET-endpoints zijn openbaar.
+
+Bij onvoldoende rechten geeft de API:
+- 401 Unauthorized als de gebruiker niet is ingelogd.
+- 403 Forbidden als de gebruiker is ingelogd,
+  maar niet de juiste rol heeft.
+
+## 7. Lokale testgebruikers
+
+Voor lokaal testen zijn Admin- en Editor-gebruikers beschikbaar.
+
+De DbSeeder maakt rollen aan en kan lokale testgebruikers toevoegen.
+
+Wachtwoorden worden niet rechtstreeks in de broncode opgeslagen,
+maar via .NET User Secrets.
+
+Voorbeeld om lokaal een Admin-wachtwoord in te stellen:
+
+dotnet user-secrets set "SeedUsers:AdminPassword" "EIGEN_WACHTWOORD"
+
+Voor de Editor:
+
+dotnet user-secrets set "SeedUsers:EditorPassword" "EIGEN_WACHTWOORD"
+
+Deze commando's voer je uit vanuit de map PortfolioApi.
+
+De voorbeeldwaarde EIGEN_WACHTWOORD moet worden vervangen
+door een eigen wachtwoord.
+
+Om een gebruiker lokaal de rol Editor of Admin te geven,
+wordt UserManager.AddToRoleAsync gebruikt. Publieke
+registratie kent nooit deze rollen toe.
+
+## 8. Integratietests
+
+Het project PortfolioApi.Tests bevat automatische tests
+met xUnit en WebApplicationFactory.
+
+Deze tests starten een testversie van de API en sturen
+HTTP-requests naar de echte endpoints.
+
+De tests gebruiken SQL Server en de aparte database
+PortfolioTestDb.
+
+### Tests uitvoeren
+
+Open een terminal in de hoofdmap van de repository.
+
+Voer uit:
+
+dotnet test PortfolioApi.Tests/PortfolioApi.Tests.csproj
+
+### Wat wordt getest?
+
+- Alle vijf CRUD-routes voor Projects.
+- Alle vijf CRUD-routes voor Blogposts.
+- Registratie met de rol Gast.
+- Inloggen met geldige en ongeldige gegevens.
+- Openbare GET-routes.
+- 401 bij niet-ingelogde schrijfacties.
+- 403 bij schrijfacties zonder de juiste rol.
+- Rechten van Editor en Admin.
+- 404 bij niet-bestaande ID's.
+- 400 bij ongeldige JSON en ontbrekende verplichte velden.
+- Opslaan, wijzigen en verwijderen van gegevens.
+
+De tests zijn opgebouwd volgens Arrange, Act en Assert.
+
+## 9. Validatie en foutafhandeling
+
+DTO's worden gebruikt om inkomende gegevens te valideren.
+
+Verplichte velden zijn gemarkeerd met [Required].
+URL-velden kunnen worden gecontroleerd met [Url].
+
+Mogelijke HTTP-statuscodes:
+
+200 OK: aanvraag geslaagd.
+201 Created: nieuw object aangemaakt.
+204 No Content: wijziging of verwijdering geslaagd.
+400 Bad Request: ongeldige invoer.
+401 Unauthorized: gebruiker is niet ingelogd.
+403 Forbidden: gebruiker heeft onvoldoende rechten.
+404 Not Found: gevraagde gegevens bestaan niet.
+
+## 10. Beveiliging
+
+- Wachtwoorden worden beheerd door ASP.NET Core Identity.
+- Identity slaat wachtwoordhashes op in de database.
+- Admin- en Editor-wachtwoorden horen niet in de broncode.
+- De testdatabase is gescheiden van de normale database.
+- Schrijf- en verwijderacties zijn beveiligd met rollen.
+- Publieke registratie kent alleen de rol Gast toe.
+
+## 11. Testbewijs
+
+De werking van de API is vastgelegd met:
+- Screenshots van Swagger.
+- Een overzicht van alle routes.
+- Een matrix met de rechten per gebruikersrol.
+- Screenshots van de uitvoer van dotnet test.
+- Een toelichting op de gebruikte integratietests.

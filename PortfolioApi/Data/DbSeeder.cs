@@ -25,27 +25,43 @@ public static class DbSeeder
             }
         }
 
-        const string adminEmail = "admin@portfolio.test";
-        const string adminPassword = "Admin123!";
+ 
+const string adminEmail = "admin@portfolio.test";
 
-        var admin = await userManager.FindByEmailAsync(adminEmail);
+var adminPassword = scope.ServiceProvider
+    .GetRequiredService<IConfiguration>()
+    ["SeedUsers:AdminPassword"];
 
-        if (admin == null)
-        {
-            admin = new User
-            {
-                UserName = adminEmail,
-                Email = adminEmail,
-                EmailConfirmed = true
-            };
+var admin = await userManager.FindByEmailAsync(adminEmail);
 
-            await userManager.CreateAsync(admin, adminPassword);
-        }
+if (admin == null)
+{
+    if (string.IsNullOrWhiteSpace(adminPassword))
+    {
+        throw new InvalidOperationException(
+            "Admin-wachtwoord ontbreekt in User Secrets.");
+    }
 
-        if (!await userManager.IsInRoleAsync(admin, "Admin"))
-        {
-            await userManager.AddToRoleAsync(admin, "Admin");
-        }
+    admin = new User
+    {
+        UserName = adminEmail,
+        Email = adminEmail,
+        EmailConfirmed = true
+    };
+
+    var result = await userManager.CreateAsync(admin, adminPassword);
+
+    if (!result.Succeeded)
+    {
+        throw new InvalidOperationException(
+            "Admin-gebruiker aanmaken mislukt.");
+    }
+}
+
+if (!await userManager.IsInRoleAsync(admin, "Admin"))
+{
+    await userManager.AddToRoleAsync(admin, "Admin");
+}
 
         const string editorEmail = "editor@portfolio.test";
 

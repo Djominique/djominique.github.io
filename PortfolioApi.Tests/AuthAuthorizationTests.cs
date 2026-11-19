@@ -383,6 +383,54 @@ public class AuthAuthorizationTests : IAsyncLifetime
             response.StatusCode);
     }
 
+    [Fact]
+public async Task CreateProject_ZonderTitel_Geeft400()
+{
+    // Arrange
+    var admin = await MaakRolGebruikerAsync("Admin");
+    await LoginAsync(admin.Email, admin.Password);
+
+    var project = new
+    {
+        beschrijving = "Project zonder titel",
+        categorie = "Testing",
+        gitHubUrl = "https://github.com/example/test",
+        datum = DateTime.UtcNow
+    };
+
+    // Act
+    var response = await _client.PostAsJsonAsync(
+        "/api/Projects", project);
+
+    // Assert
+    Assert.Equal(
+        HttpStatusCode.BadRequest,
+        response.StatusCode);
+}
+
+[Fact]
+public async Task CreateBlogpost_ZonderTitel_Geeft400()
+{
+    // Arrange
+    var admin = await MaakRolGebruikerAsync("Admin");
+    await LoginAsync(admin.Email, admin.Password);
+
+    var blogpost = new
+    {
+        inhoud = "Een blogpost zonder titel",
+        publicatiedatum = DateTime.UtcNow
+    };
+
+    // Act
+    var response = await _client.PostAsJsonAsync(
+        "/api/Blogposts", blogpost);
+
+    // Assert
+    Assert.Equal(
+        HttpStatusCode.BadRequest,
+        response.StatusCode);
+}
+
     public async Task DisposeAsync()
     {
         if (_factory == null)
