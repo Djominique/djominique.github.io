@@ -21,14 +21,11 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 
         builder.ConfigureTestServices(services =>
         {
-            // Verwijder de normale databaseconfiguratie.
-            services.RemoveAll<
-                IDbContextOptionsConfiguration<PortfolioDbContext>>();
+            // Normale database-instellingen verwijderen.
+            services.RemoveAll<IDbContextOptionsConfiguration<PortfolioDbContext>>();
+            services.RemoveAll<DbContextOptions<PortfolioDbContext>>();
 
-            services.RemoveAll<
-                DbContextOptions<PortfolioDbContext>>();
-
-            // Gebruik uitsluitend de testdatabase.
+            // Alleen de testdatabase gebruiken.
             services.AddDbContext<PortfolioDbContext>(options =>
                 options.UseSqlServer(TestConnection));
         });

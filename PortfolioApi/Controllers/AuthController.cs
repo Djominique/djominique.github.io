@@ -26,7 +26,7 @@ public class AuthController : ControllerBase
     {
         var user = new User
         {
-            UserName = dto.Email,
+            UserName = dto.Email,  
             Email = dto.Email
         };
 
